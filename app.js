@@ -1,17 +1,18 @@
 const express = require('express');
 
 const app = express();
-let expressWs = require('express-ws')(app);
+// let expressWs = require('express-ws')(app);
+
+app.set('view engine', 'ejs');
+
 
 const webPort = 8080;
 
+app.get('/', function (req, res) {
+	res.render('pages/index');
+})
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.json());
-
-app.use(express.static('public'));
 
 app.listen(webPort, function () {
    console.log('listening on ' + webPort);
