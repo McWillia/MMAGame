@@ -1,0 +1,5 @@
+[
+    {"name": "jab", "chance": 0.9, "damage": 1},
+    {"name": "cross", "chance": 0.8, "damage": 2},
+    {"name": "hook", "chance": 0.7, "damage": 3}
+]

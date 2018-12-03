@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "mmagame",
   "version": "0.0.0",
@@ -22,3 +23,29 @@
     "express-ws": "^4.0.0"
   }
 }
+=======
+{
+  "name": "mmagame",
+  "version": "0.0.0",
+  "description": "A Browser MMA game",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/McWillia/MMAGame.git"
+  },
+  "author": "sjm39",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/McWillia/MMAGame/issues"
+  },
+  "homepage": "https://github.com/McWillia/MMAGame#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-ws": "^4.0.0"
+  }
+}
+>>>>>>> 7818da54e0dc9719bad0999aa818da8fa35dbd2c
