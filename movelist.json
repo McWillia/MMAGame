@@ -1,5 +1,12 @@
 [
-    {"name": "jab", "chance": 0.9, "damage": 1},
-    {"name": "cross", "chance": 0.8, "damage": 2},
-    {"name": "hook", "chance": 0.7, "damage": 3}
+    {"name": "jab", "type":"punch", "chance": 0.95, "damage": 1, "advantage": 0.2},
+    {"name": "cross", "type":"punch", "chance": 0.9, "damage": 2, "advantage": 0.3},
+    {"name": "hook", "type":"punch", "chance": 0.85, "damage": 2.5, "advantage": 0.35},
+    {"name": "uppercut", "type":"punch", "chance": 0.85, "damage": 3, "advantage": 0.4},
+    {"name": "bodyshot", "type":"punch", "chance": 0.85, "damage": 2.5, "advantage": 0.35},
+    {"name": "superman", "type":"punch", "chance": 0.2, "damage": 5, "advantage": 1},
+    {"name": "legkick", "type":"kick", "chance": 0.85, "damage": 2, "advantage": 0.4},
+    {"name": "bodykick", "type":"kick", "chance": 0.8, "damage": 4, "advantage": 0.4},
+    {"name": "axe", "type":"kick", "chance": 0.6, "damage": 5, "advantage": 0.4},
+    {"name": "teep", "type":"kick", "chance": 0.8, "damage": 3, "advantage": 0.35}
 ]
