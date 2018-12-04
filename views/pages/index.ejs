@@ -2,23 +2,44 @@
 <html>
 <head>
 
-	    <% include ../partial/header %>
 
-<body>
-
-
-	<div class="jumbotron">
-		<h1>IM A HEADER</h1>
-	</div> 
-
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12" id="output">CONTENT</div>
-
-		</div>
+    <% include ../partial/header %>
+    <% include ../partial/scripts %>
 
 
-	</div>
+<body onload="init()">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" id="div1"></div>
+            <div class="col-md-4" id="div2">
+                <h1>Section 2</h1>
+                <input type="radio" name="section2" value="1"> 1<br>
+                <input type="radio" name="section2" value="2"> 2<br>
+                <input type="radio" name="section2" value="3"> 3<br>
+                <button id="button" onclick="sendWS()">ws</button>
+            </div>
+            <div class="col-md-4" id="div3">
+                <h1>Section 3</h1>
+
+                <input type="text" id="in" value="Bert">
+
+                <button id="otherbutton" onclick="getTurn()">GET</button>
+
+                <!-- First name:<br>
+                <input type="text" name="Data1" id="Data1" value="Im data">
+                <br>
+                Last name:<br>
+                <input type="text" name="Data2" id="Data2" value="As am I">
+                <button id="button" onclick="sendWS()">ws</button> -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6"></div>
+        </div>
+    </div>
 
 </body>
 </html>

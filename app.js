@@ -3,6 +3,10 @@ const express = require('express');
 const app = express();
 // let expressWs = require('express-ws')(app);
 
+
+app.use(express.static( __dirname + 'public'));
+
+app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 const model = require('./model');
@@ -11,9 +15,16 @@ model.init();
 
 const webPort = 8080;
 
+app.use(express.static('public'));
+
+
+
 app.get('/', function (req, res) {
 	res.render('pages/index');
-})
+});
+
+
+
 
 app.listen(webPort, function () {
    console.log('listening on ' + webPort);
@@ -45,4 +56,3 @@ app.get('/turn', function (req, res) {
 //         console.log("message");
 //     })
 // });
-
