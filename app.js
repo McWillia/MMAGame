@@ -43,6 +43,16 @@ app.get('/turn', function (req, res) {
 
 });
 
+app.get('/moves', function (req, res) {
+
+    // console.log("here");
+    model.moveList(req, res);
+
+    res.statusCode = 200;
+    res.send(res.data);
+
+});
+
 // let websockets = {};
 //
 //

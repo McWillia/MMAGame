@@ -14,17 +14,18 @@
             <div class="col-md-4" id="div1"></div>
             <div class="col-md-4" id="div2">
                 <h1>Section 2</h1>
-                <input type="radio" name="section2" value="1"> 1<br>
-                <input type="radio" name="section2" value="2"> 2<br>
-                <input type="radio" name="section2" value="3"> 3<br>
-                <button id="button" onclick="sendWS()">ws</button>
+
+                <button id="button" onclick="addMove()">Add Move</button>
             </div>
             <div class="col-md-4" id="div3">
                 <h1>Section 3</h1>
 
-                <input type="text" id="in" value="Bert">
-
+                <input type="text" id="in" value="jab,jab,cross">
                 <button id="otherbutton" onclick="getTurn()">GET</button>
+                <button id="clearMoves" onclick="$('#in').val('');">Clear</button>
+
+                <div id="output">out</div>
+
 
                 <!-- First name:<br>
                 <input type="text" name="Data1" id="Data1" value="Im data">
@@ -36,7 +37,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6"></div>
+            <div class="col-md-6" id="tables"></div>
             <div class="col-md-6"></div>
         </div>
     </div>

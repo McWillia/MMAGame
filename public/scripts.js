@@ -2,20 +2,87 @@ var ws = null;
 function init(){
     //console.log("berto")
     $("<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>").appendTo('.col-md-6');
-
+    getMoveList();
     startGame();
     //webSoc();
 }
 
-function getTurn(){
-    console.log($('#in').val());
-    $.get("/turn",
-    {name:$('#in').val()},
+function getMoveList(){
+    // <input type="radio" name="section2" value="1"> 1<br>
+    $.get("/moves",
      function (data) {
-        console.log("Data:" + JSON.stringify(data));
+        //console.log("Data:" + JSON.stringify(data));
+
+        for (var i = 0; i < data.length; i++) {
+            //console.log(data[i].name);
+            $("<input type=\"radio\" name=\"section2\" value=\"" + data[i].name + "\">" + data[i].name + "<br>").insertBefore("#button");
+        }
+
     });
 }
 
+function addMove(){
+    var selValue = $('input[name=section2]:checked').val();
+    var currentMoves = $('#in').val();
+
+    if (currentMoves === "") {
+        $('#in').val(selValue);
+    } else {
+        $('#in').val(currentMoves + "," + selValue);
+    }
+}
+
+function getTurn(){
+    //console.log($('#in').val());
+    $.get("/turn",
+    {name:$('#in').val()},
+     function (data) {
+        //console.log("Data:" + JSON.stringify(data.moves));
+        if (JSON.stringify(data.moves) === "No such move") {
+            $("#tables").empty();
+
+            $("<p>No such move</p>").appendTo('#tables');
+
+        } else {
+            var col = ["name", "type","chance", "damage", "advantage"];
+
+            appendResult(col, data.moves);
+            $("#output").empty();
+            //console.log(data.damage);
+            $("<p>" + data.damage + "</p>").appendTo('#output');
+
+
+        }
+
+
+
+    });
+}
+
+
+
+function appendResult(columns, res) {
+    $("#tables").empty();
+    var myTable = "<table><tr>"; //Starter
+
+    for (var i = 0; i < columns.length; i++) {
+        myTable += "<th>" + columns[i] + "</th>"; //Add each column head
+    }
+    myTable += "</tr>"; //End head row
+
+    for (var i = 0; i < res.length; i++) { //For each request
+        myTable += "<tr>"; //Start the row
+        for (var j = 0; j < columns.length; j++) { //For each column
+            myTable += "<td>" + res[i][columns[j]] + "</td>"; //Add data for res with column
+            var colName = columns[j];
+        }
+        myTable += "</tr>"; //End column row
+    }
+    myTable += "</table>";
+
+    $(myTable).appendTo('#tables');
+
+}
 
 
 function webSoc() {
@@ -30,9 +97,6 @@ function webSoc() {
         console.log(data);
     }
 }
-
-
-
 
 function sendWS() {
     if(ws!=null && ws.readyState === 1){
@@ -50,7 +114,6 @@ function sendWS() {
         }));
     }
 }
-
 
 var redGamePiece, blueGamePiece, yellowGamePiece;
 
