@@ -11,34 +11,35 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-4" id="div1"></div>
             <div class="col-md-4" id="div2">
-                <h1>Section 2</h1>
+                <h1>MoveList</h1>
 
-                <button id="button" onclick="addMove()">Add Move</button>
-            </div>
+                <button id="OffButton" onclick="addMove()">Add Move</button></div>
             <div class="col-md-4" id="div3">
-                <h1>Section 3</h1>
+                <h1>Turn Setup</h1>
+                <input type="text" id="inOff" value="jab,jab,cross"><br>
+                <input type="text" id="inDef" value="Neutral"><br>
 
-                <input type="text" id="in" value="jab,jab,cross">
                 <button id="otherbutton" onclick="getTurn()">GET</button>
-                <button id="clearMoves" onclick="$('#in').val('');">Clear</button>
-
-                <div id="output">out</div>
+                <button id="clearMoves" onclick="$('#inOff').val('');$('#inDef').val('');">Clear</button>
 
 
-                <!-- First name:<br>
-                <input type="text" name="Data1" id="Data1" value="Im data">
-                <br>
-                Last name:<br>
-                <input type="text" name="Data2" id="Data2" value="As am I">
-                <button id="button" onclick="sendWS()">ws</button> -->
+            </div>
+            <div class="col-md-4" id="div1">
+                <h1>Defensive Posture</h1>
+                <button id="DefButton" onclick="addStance()">Select Stance</button></div>
+
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6" id="tables"></div>
-            <div class="col-md-6"></div>
+            <div class="col-md-5" id="scrollBox">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12" id="Boxes"></div>
         </div>
     </div>
 

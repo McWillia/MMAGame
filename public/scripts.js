@@ -1,41 +1,52 @@
 var ws = null;
 function init(){
     //console.log("berto")
-    $("<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>").appendTo('.col-md-6');
+    //$("<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>").appendTo('.col-md-6');
     getMoveList();
-    startGame();
+    // startGame();
     //webSoc();
 }
 
 function getMoveList(){
-    // <input type="radio" name="section2" value="1"> 1<br>
     $.get("/moves",
      function (data) {
-        //console.log("Data:" + JSON.stringify(data));
+        // console.log("Data:" + JSON.stringify(data));
 
-        for (var i = 0; i < data.length; i++) {
+
+        for (var i = 0; i < data.Off.length; i++) {
             //console.log(data[i].name);
-            $("<input type=\"radio\" name=\"section2\" value=\"" + data[i].name + "\">" + data[i].name + "<br>").insertBefore("#button");
+            $("<input type=\"radio\" name=\"Off\" value=\"" + data.Off[i].name + "\">" + data.Off[i].name + "<br>").insertBefore("#OffButton");
+        }
+
+        for (var i = 0; i < data.Def.length; i++) {
+            //console.log(data[i].name);
+            $("<input type=\"radio\" name=\"Def\" value=\"" + data.Def[i].name + "\">" + data.Def[i].name + "<br>").insertBefore("#DefButton");
         }
 
     });
 }
 
 function addMove(){
-    var selValue = $('input[name=section2]:checked').val();
-    var currentMoves = $('#in').val();
+    var selValue = $('input[name=Off]:checked').val();
+    var currentMoves = $('#inOff').val();
 
     if (currentMoves === "") {
-        $('#in').val(selValue);
+        $('#inOff').val(selValue);
     } else {
-        $('#in').val(currentMoves + "," + selValue);
+        $('#inOff').val(currentMoves + "," + selValue);
     }
+}
+
+function addStance(){
+    var selValue = $('input[name=Def]:checked').val();
+    $('#inDef').val(selValue);
+
 }
 
 function getTurn(){
     //console.log($('#in').val());
     $.get("/turn",
-    {name:$('#in').val()},
+    {off:$('#inOff').val(), def:$('#inDef').val()},
      function (data) {
         //console.log("Data:" + JSON.stringify(data.moves));
         if (JSON.stringify(data.moves) === "No such move") {
@@ -47,16 +58,18 @@ function getTurn(){
             var col = ["name", "type","chance", "damage", "advantage"];
 
             appendResult(col, data.moves);
-            $("#output").empty();
+            //$("#output").empty();
             //console.log(data.damage);
-            $("<p>" + data.damage + "</p>").appendTo('#output');
-
+            var chances = Math.round((1-data.chance)*100);
+            $("<p>Roll: " + chances + " | Damage: " + data.damage + " | Stance: " + data.stance + "</p>").appendTo('#scrollBox');
+            updateScroll();
 
         }
-
-
-
     });
+}
+
+function updateScroll(){
+    $('#scrollBox').scrollTop(9999999999999999999999999999999999999);
 }
 
 
@@ -130,7 +143,7 @@ var myGameArea = {
         this.canvas.width = 300;
         this.canvas.height = 300;
         this.context = this.canvas.getContext("2d");
-        $(this.canvas).appendTo('#div1');
+        $(this.canvas).appendTo('#Boxes');
         this.interval = setInterval(updateGameArea, 20);
     },
     clear : function() {

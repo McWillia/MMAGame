@@ -1,0 +1,5 @@
+[
+    {"name": "Boxing Gaurd", "punchDef":0.6, "kickDef": 0.3},
+    {"name": "Square Thai Stance", "punchDef":0.2, "kickDef": 0.7},
+    {"name": "Neutral", "punchDef":0.45, "kickDef": 0.45}
+]

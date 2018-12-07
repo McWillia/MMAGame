@@ -22,7 +22,20 @@ canvas {
     background-color: #f2f2f2;
 }
 
+#div1 {
+    border-left: 5px solid #009933;
+    background-color: #f2f2f2;
+}
+
 #div3 {
     border-left: 5px solid #ff3333;
     background-color: #f2f2f2;
+}
+
+#scrollBox{
+    height:300px;
+    width:100%;
+    border:1px solid #ccc;
+    /* font:16px/26px Georgia, Garamond, Serif; */
+    overflow:auto;
 }
