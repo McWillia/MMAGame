@@ -15,13 +15,43 @@ model.init = function () {
     });
 }
 
+model.Game = class {
+
+    constructor(nameIn) {
+        // console.log(nameIn);
+        this.player = new model.Fighter(nameIn);
+        this.ai = new model.Fighter("Opponent");
+    }
+
+    getAI(){return this.ai;}
+    getPlayer(){return this.player;}
+
+
+}
+
+model.Fighter = class {
+
+    constructor (nameIn) {
+        this.name = nameIn;
+        this.health = 100;
+        this.stance = "Neutral";
+    }
+
+    getName(){return this.name;}
+
+    getHealth(){return this.health;}
+
+}
+
 model.moveList = function(req, res){
     if (moveList != undefined && moveListDef != undefined) {
         res.data = {"Off":moveList, "Def":moveListDef};
     }
 }
 
-model.turn = function(req, res) {
+model.turn = function (req, res) {
+    var gameState = req.query.gameStateIn;
+    console.log(gameState.ai.name);
     var i = 0;
     var j = 0;
     var found = false;
@@ -65,6 +95,9 @@ model.turn = function(req, res) {
 
     if (!failed) {
         var damageC = calculateDamage(movesOut);
+        if (damageC.dmg > 0) {
+
+        }
         res.data = {moves:movesOut, chance:damageC.chance, damage: damageC.dmg, stance: req.query.def};
     }
 }

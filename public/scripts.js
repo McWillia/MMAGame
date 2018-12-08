@@ -1,52 +1,39 @@
 var ws = null;
+var gameState = undefined;
 function init(){
-    //console.log("berto")
+    // console.log("berto")
     //$("<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>").appendTo('.col-md-6');
     getMoveList();
+    startNewGame("Bert");
     // startGame();
     //webSoc();
 }
 
-function getMoveList(){
-    $.get("/moves",
-     function (data) {
-        // console.log("Data:" + JSON.stringify(data));
 
 
-        for (var i = 0; i < data.Off.length; i++) {
-            //console.log(data[i].name);
-            $("<input type=\"radio\" name=\"Off\" value=\"" + data.Off[i].name + "\">" + data.Off[i].name + "<br>").insertBefore("#OffButton");
-        }
+function startNewGame() {
+    var name = $('#newGameText').val();
+    $("#tables").empty();
+    $("#scrollBox").empty();
 
-        for (var i = 0; i < data.Def.length; i++) {
-            //console.log(data[i].name);
-            $("<input type=\"radio\" name=\"Def\" value=\"" + data.Def[i].name + "\">" + data.Def[i].name + "<br>").insertBefore("#DefButton");
-        }
-
+    $.get("/newGame",
+    {nameIn:name},
+    function (data) {
+        gameState = data;
+        console.log(gameState);
+        console.log(gameState.ai.name + " : " + gameState.player.name);
     });
-}
-
-function addMove(){
-    var selValue = $('input[name=Off]:checked').val();
-    var currentMoves = $('#inOff').val();
-
-    if (currentMoves === "") {
-        $('#inOff').val(selValue);
-    } else {
-        $('#inOff').val(currentMoves + "," + selValue);
-    }
-}
-
-function addStance(){
-    var selValue = $('input[name=Def]:checked').val();
-    $('#inDef').val(selValue);
 
 }
+
+// function outputGameState(){
+//
+// }
 
 function getTurn(){
     //console.log($('#in').val());
     $.get("/turn",
-    {off:$('#inOff').val(), def:$('#inDef').val()},
+    {gameStateIn:gameState, off:$('#inOff').val(), def:$('#inDef').val()},
      function (data) {
         //console.log("Data:" + JSON.stringify(data.moves));
         if (JSON.stringify(data.moves) === "No such move") {
@@ -68,12 +55,36 @@ function getTurn(){
     });
 }
 
-function updateScroll(){
-    $('#scrollBox').scrollTop(9999999999999999999999999999999999999);
+
+
+
+//
+//
+// USED FOR SUPERFICIAL STUFF
+//
+//
+
+//On load add the movelist to the screen
+function getMoveList(){
+    $.get("/moves",
+     function (data) {
+        // console.log("Data:" + JSON.stringify(data));
+
+
+        for (var i = 0; i < data.Off.length; i++) {
+            //console.log(data[i].name);
+            $("<input type=\"radio\" name=\"Off\" value=\"" + data.Off[i].name + "\">" + data.Off[i].name + "<br>").insertBefore("#OffButton");
+        }
+
+        for (var i = 0; i < data.Def.length; i++) {
+            //console.log(data[i].name);
+            $("<input type=\"radio\" name=\"Def\" value=\"" + data.Def[i].name + "\">" + data.Def[i].name + "<br>").insertBefore("#DefButton");
+        }
+
+    });
 }
 
-
-
+//Stick the results in a table
 function appendResult(columns, res) {
     $("#tables").empty();
     var myTable = "<table><tr>"; //Starter
@@ -97,6 +108,33 @@ function appendResult(columns, res) {
 
 }
 
+//Move the scroll to the bottom
+function updateScroll(){
+    $('#scrollBox').scrollTop(9999999999999999999999999999999999999);
+}
+
+function addMove(){
+    var selValue = $('input[name=Off]:checked').val();
+    var currentMoves = $('#inOff').val();
+
+    if (currentMoves === "") {
+        $('#inOff').val(selValue);
+    } else {
+        $('#inOff').val(currentMoves + "," + selValue);
+    }
+}
+
+function addStance(){
+    var selValue = $('input[name=Def]:checked').val();
+    $('#inDef').val(selValue);
+
+}
+
+//
+//
+//NOT USED
+//
+//
 
 function webSoc() {
     ws = new WebSocket('ws://localhost:8080/ws/1');

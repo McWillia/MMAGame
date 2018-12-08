@@ -32,10 +32,23 @@ app.listen(webPort, function () {
 
 
 
+app.get('/newGame', function (req, res) {
+
+    // console.log(req.query.nameIn);
+    var game = new model.Game(req.query.nameIn);
+
+    console.log(game + " : " + game.getAI().getName() + " : " + game.getPlayer().getName());
+
+    res.data = game;
+    res.statusCode = 200;
+    res.send(res.data);
+
+});
 
 app.get('/turn', function (req, res) {
 
     //console.log(req.query.name);
+    // req.query.gameStateIn
     model.turn(req, res);
 
     res.statusCode = 200;
