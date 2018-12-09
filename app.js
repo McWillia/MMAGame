@@ -37,7 +37,7 @@ app.get('/newGame', function (req, res) {
     // console.log(req.query.nameIn);
     var game = new model.Game(req.query.nameIn);
 
-    console.log(game + " : " + game.getAI().getName() + " : " + game.getPlayer().getName());
+    // console.log(game + " : " + game.getAI().getName() + " : " + game.getPlayer().getName());
 
     res.data = game;
     res.statusCode = 200;

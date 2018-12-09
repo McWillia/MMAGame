@@ -9,8 +9,6 @@ function init(){
     //webSoc();
 }
 
-
-
 function startNewGame() {
     var name = $('#newGameText').val();
     $("#tables").empty();
@@ -22,41 +20,29 @@ function startNewGame() {
         gameState = data;
         console.log(gameState);
         console.log(gameState.ai.name + " : " + gameState.player.name);
+        $("<p>New Fight Between " + gameState.ai.name + " & " + gameState.player.name + "</p>").appendTo("#scrollBox");
+
     });
 
 }
 
-// function outputGameState(){
-//
-// }
-
 function getTurn(){
-    //console.log($('#in').val());
     $.get("/turn",
     {gameStateIn:gameState, off:$('#inOff').val(), def:$('#inDef').val()},
      function (data) {
-        //console.log("Data:" + JSON.stringify(data.moves));
         if (JSON.stringify(data.moves) === "No such move") {
             $("#tables").empty();
-
             $("<p>No such move</p>").appendTo('#tables');
-
         } else {
             var col = ["name", "type","chance", "damage", "advantage"];
-
             appendResult(col, data.moves);
-            //$("#output").empty();
-            //console.log(data.damage);
-            var chances = Math.round((1-data.chance)*100);
-            $("<p>Roll: " + chances + " | Damage: " + data.damage + " | Stance: " + data.stance + "</p>").appendTo('#scrollBox');
+            gameState = data.state;
+            $("<p>Turn: " + gameState.turn + " | Roll: " + Math.round((1-data.chance)*100) + " | Damage: " + data.damage + " | Opponent Health: " + gameState.ai.health + "</p>").appendTo('#scrollBox');
             updateScroll();
 
         }
     });
 }
-
-
-
 
 //
 //
