@@ -27,21 +27,25 @@ function startNewGame() {
 }
 
 function getTurn(){
-    $.get("/turn",
-    {gameStateIn:gameState, off:$('#inOff').val(), def:$('#inDef').val()},
-     function (data) {
-        if (JSON.stringify(data.moves) === "No such move") {
-            $("#tables").empty();
-            $("<p>No such move</p>").appendTo('#tables');
-        } else {
-            var col = ["name", "type","chance", "damage", "advantage"];
-            appendResult(col, data.moves);
-            gameState = data.state;
-            $("<p>Turn: " + gameState.turn + " | Roll: " + Math.round((1-data.chance)*100) + " | Damage: " + data.damage + " | Opponent Health: " + gameState.ai.health + "</p>").appendTo('#scrollBox');
-            updateScroll();
+    if (gameState.winner == undefined) {
+        $.get("/turn",
+        {gameStateIn:gameState, off:$('#inOff').val(), def:$('#inDef').val()},
+         function (data) {
+            if (JSON.stringify(data.moves) === "No such move") {
+                $("#tables").empty();
+                $("<p>No such move</p>").appendTo('#tables');
+            } else {
+                var col = ["name", "type","chance", "damage", "advantage"];
+                appendResult(col, data.moves);
+                gameState = data.state;
 
-        }
-    });
+                printGameState(data);
+
+
+
+            }
+        });
+    }
 }
 
 //
@@ -49,6 +53,30 @@ function getTurn(){
 // USED FOR SUPERFICIAL STUFF
 //
 //
+
+function printGameState(data){
+
+    var out =   "<p>Turn: " + gameState.turn +
+                "<br>" + gameState.player.name +
+                ":-<br>Roll : " + Math.round((1-data.chance)*100) +
+                " | Damage Dealt : " + data.damage +
+                " | Health : " + gameState.player.health +
+                " | Stance : " + gameState.player.stance.name +
+                "<br>" + gameState.ai.name +
+                ":-<br>Roll : " + Math.round((1-data.chance)*100) +
+                " | Damage Dealt: " + data.damage +
+                " | Health : " + gameState.ai.health +
+                " | Stance : " + gameState.ai.stance.name +
+                "</p>";
+
+
+    $(out).appendTo('#scrollBox');
+
+    if (gameState.winner != undefined) {
+        $("<p> And the winner by KO is " + gameState.winner.name + "</p>").appendTo("#scrollBox");
+    }
+    updateScroll();
+}
 
 //On load add the movelist to the screen
 function getMoveList(){
@@ -164,8 +192,8 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 300;
-        this.canvas.height = 300;
+        this.canvas.width = 600;
+        this.canvas.height = 600;
         this.context = this.canvas.getContext("2d");
         $(this.canvas).appendTo('#Boxes');
         this.interval = setInterval(updateGameArea, 20);

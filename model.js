@@ -22,10 +22,12 @@ model.Game = class {
         this.turn = 0;
         this.player = new model.Fighter(nameIn);
         this.ai = new model.Fighter("Opponent");
+        this.winner = undefined;
     }
 
     getAI(){return this.ai;}
     getPlayer(){return this.player;}
+    getWinner(){return this.winner;}
 
 
 }
@@ -34,7 +36,7 @@ model.Fighter = class {
 
     constructor (nameIn) {
         this.name = nameIn;
-        this.health = 100;
+        this.health = 50;
         this.stance = {name: "Neutral", punch:0.45, kick: 0.4}
     }
 
@@ -52,13 +54,13 @@ model.moveList = function(req, res){
 
 model.turn = function (req, res) {
     var gameState = req.query.gameStateIn;
-    // console.log(gameState.ai);
     var i = 0;
     var j = 0;
     var found = false;
     var failed = false;
     var movesIn = req.query.off.split(",");
     var movesOut = [];
+    var newDef;
 
     ///GET MOVES FROM THE MOVE LIST
     while (j < movesIn.length & !failed ) {
@@ -85,12 +87,12 @@ model.turn = function (req, res) {
     while (!found && i < moveListDef.length) {
         if (moveListDef[i].name == req.query.def) {
             found = true;
-            //movesOut.push(moveList[i]);
+            newDef = moveListDef[i];
         }
         i++;
     }
 
-
+    //Invalid move
     if (!found) {
         res.data = "No such move";
         failed = true;
@@ -99,42 +101,36 @@ model.turn = function (req, res) {
 
     ///If moves were found
     if (!failed) {
-        // console.log(gameState.ai);
+        //Set Defences
+        gameState.player.stance = newDef;
+        gameState.ai.stance = getRandomStance();
+
+        //Increment turn
         var turn = Number(gameState.turn) +  Number(1);
         gameState.turn = turn;
+
+        //Calculate the damage
         var damageC = calculateDamage(movesOut, gameState.ai);
         gameState.ai.health -= damageC.dmg;
-        res.data = {moves:movesOut, chance:damageC.chance, damage: damageC.dmg, state:gameState};
+
+        //Check for winners
+        if (gameState.ai.health <= 0) {
+            gameState.winner = gameState.player;
+        } else if (gameState.player.health <= 0) {
+            gameState.winner = gameState.ai;
+        }
+
+        //Return data
+        res.data = {moves:movesOut, chance:damageC.chance, damage: damageC.dmg, chanceAI:0, damageAI: 0, state:gameState};
+
     }
 }
-//
-// function calculateDodge(movesOut, gameStateIn){
-//     var damage=0;
-//     var chance=1;
-//     var roll;
-//     var moveType;
-//
-//     for (var i = 0; i < movesOut.length; i++) {
-//         moveType = movesOut[i].type;
-//         roll = Math.random();
-//
-//         if () {
-//
-//         }
-//         damage -= movesOut[i].damage;
-//
-//     }
-//
-//
-//
-//     //console.log(roll + " : " + chance);
-//     if (chance > roll) {
-//         return {dmg:damage,chance:roll, gameState: gameStateOut};
-//     } else {
-//         return {dmg:0,chance:roll};
-//     }
-//
-// }
+
+function getRandomStance() {
+    var roll = Math.floor(Math.random()*moveListDef.length);
+    // console.log(roll + " : " + moveListDef[roll]);
+    return moveListDef[roll];
+}
 
 function calculateDamage(movesOut, ai){
     // console.log(ai);
