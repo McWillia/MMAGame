@@ -63,8 +63,8 @@ function printGameState(data){
                 " | Health : " + gameState.player.health +
                 " | Stance : " + gameState.player.stance.name +
                 "<br>" + gameState.ai.name +
-                ":-<br>Roll : " + Math.round((1-data.chance)*100) +
-                " | Damage Dealt: " + data.damage +
+                ":-<br>Roll : " + Math.round((1-data.chanceAI)*100) +
+                " | Damage Dealt: " + data.damageAI +
                 " | Health : " + gameState.ai.health +
                 " | Stance : " + gameState.ai.stance.name +
                 "</p>";

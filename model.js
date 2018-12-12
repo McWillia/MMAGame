@@ -103,15 +103,22 @@ model.turn = function (req, res) {
     if (!failed) {
         //Set Defences
         gameState.player.stance = newDef;
-        gameState.ai.stance = getRandomStance();
 
+        if (gameState.turn % 3 == 0) {
+            gameState.ai.stance = getRandomStance();
+        }
         //Increment turn
         var turn = Number(gameState.turn) +  Number(1);
         gameState.turn = turn;
 
+        var aiMoves = getRandomAttacks();
+
         //Calculate the damage
-        var damageC = calculateDamage(movesOut, gameState.ai);
-        gameState.ai.health -= damageC.dmg;
+        var damageOpp = calculateDamage(movesOut, gameState.player.stance);
+        gameState.player.health -= damageOpp.dmg;
+
+        var damagePlayer = calculateDamage(movesOut, gameState.ai.stance);
+        gameState.ai.health -= damagePlayer.dmg;
 
         //Check for winners
         if (gameState.ai.health <= 0) {
@@ -121,18 +128,28 @@ model.turn = function (req, res) {
         }
 
         //Return data
-        res.data = {moves:movesOut, chance:damageC.chance, damage: damageC.dmg, chanceAI:0, damageAI: 0, state:gameState};
+        res.data = {moves:movesOut, chance:damagePlayer.chance, damage: damagePlayer.dmg, chanceAI:damageOpp.chance, damageAI: damageOpp.dmg, state:gameState};
 
     }
 }
 
 function getRandomStance() {
     var roll = Math.floor(Math.random()*moveListDef.length);
-    // console.log(roll + " : " + moveListDef[roll]);
     return moveListDef[roll];
 }
 
-function calculateDamage(movesOut, ai){
+function getRandomAttacks() {
+    var roll;
+    var out = [];
+
+    for (var i = 0; i < Math.ceil(Math.random()*5); i++) {
+        out.push(moveList[Math.floor(Math.random()*moveList.length)]);
+        // console.log(out[i]);
+    }
+    return out;
+}
+
+function calculateDamage(movesOut, stance){
     // console.log(ai);
     var damage=0;
     var chance=1;
@@ -142,7 +159,7 @@ function calculateDamage(movesOut, ai){
     for (var i = 0; i < movesOut.length; i++) {
         roll = Math.random();
         // console.log(roll + " : " + ai.stance.punch + " : " + ai.stance.kick + " : " + ai.stance[movesOut[i].type]);
-        if (roll > ai.stance[movesOut[i].type]) {
+        if (roll > stance[movesOut[i].type]) {
             damage += movesOut[i].damage;
         }
         chance *= movesOut[i].chance;
