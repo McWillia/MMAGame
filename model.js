@@ -114,7 +114,7 @@ model.turn = function (req, res) {
         var aiMoves = getRandomAttacks();
 
         //Calculate the damage
-        var damageOpp = calculateDamage(movesOut, gameState.player.stance);
+        var damageOpp = calculateDamage(aiMoves, gameState.player.stance);
         gameState.player.health -= damageOpp.dmg;
 
         var damagePlayer = calculateDamage(movesOut, gameState.ai.stance);
@@ -144,7 +144,7 @@ function getRandomAttacks() {
 
     for (var i = 0; i < Math.ceil(Math.random()*5); i++) {
         out.push(moveList[Math.floor(Math.random()*moveList.length)]);
-        // console.log(out[i]);
+        console.log(out[i]);
     }
     return out;
 }

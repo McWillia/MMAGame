@@ -127,6 +127,10 @@ function updateScroll(){
     $('#scrollBox').scrollTop(9999999999999999999999999999999999999);
 }
 
+function updateScrollTextChat(){
+    $('#textChat').scrollTop(9999999999999999999999999999999999999);
+}
+
 function addMove(){
     var selValue = $('input[name=Off]:checked').val();
     var currentMoves = $('#inOff').val();
@@ -151,32 +155,38 @@ function addStance(){
 //
 
 function webSoc() {
-    ws = new WebSocket('ws://localhost:8080/ws/1');
+    if (ws != null) {
+        ws.close();
+    }
+    ws = new WebSocket('ws://localhost:8080/ws/' + $('#newGameText').val());
     ws.onopen = function () {
-        console.log('websocket is connected ...')
-        ws.send('connected')
+        // console.log('websocket is connected ...')
+        // ws.send('connected')
     }
     ws.onmessage = function (ev) {
-        console.log(ev);
+        // console.log(ev);
         var data = event.data;
         console.log(data);
+        data = JSON.parse(data);
+        console.log(data);
+        console.log(data.user + " - " + data.chat);
+        $("<p>" + data.user + " - " + data.chat + "</p>").appendTo('#textChat');
+
+
+        updateScrollTextChat();
     }
 }
 
-function sendWS() {
+function sendChat() {
     if(ws!=null && ws.readyState === 1){
         console.log("Sending data");
-        // var selValue = $('input[name=section2]:checked').val();
-        // var data1 = $('#Data1').val();
-        // var data2 = $('#Data2').val();
-        if(selValue === undefined){selValue = 0;}
-        if(data1 === undefined){data1 = 0; console.log("1");}
-        if(data2 === undefined){data2 = 0; console.log("2");}
-        ws.send(JSON.stringify({
-            // Data1: data1,
-            // Data2: data2,
-            option:selValue
-        }));
+        var chat = $('#textEntry').val();
+        if(chat != ""){
+            ws.send(JSON.stringify({
+                ChatVal: chat
+            }));
+            var chat = $('#textEntry').val("");
+        }
     }
 }
 

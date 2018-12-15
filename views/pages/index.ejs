@@ -14,6 +14,8 @@
         <input type="text" id="newGameText" value="Bert">
 
         <button id="newGame" onclick="startNewGame()">New Game</button>
+        <button id="connector" onclick="webSoc()">Connect To Chat Server</button>
+
     </div>
 
     <div class="container">
@@ -40,13 +42,22 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4" id="tables"></div>
+            <div class="col-md-4" >
+                <div id="textChat"></div>
+                <input type="text" id="textEntry" value="" style="width:80%; margin: 10px">
+                <button id="sendChat" onclick="sendChat()">Send</button>
+
+
+            </div>
+
             <div class="col-md-7" id="scrollBox">
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-12" id="Boxes"></div>
+            <div class="col-md-4" id="tables"></div>
+
+            <div class="col-md-8" id="Boxes"></div>
         </div>
     </div>
 

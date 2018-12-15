@@ -1,7 +1,7 @@
 const express = require('express');
 
 const app = express();
-// let expressWs = require('express-ws')(app);
+let expressWs = require('express-ws')(app);
 
 
 app.use(express.static( __dirname + 'public'));
@@ -66,16 +66,32 @@ app.get('/moves', function (req, res) {
 
 });
 
-// let websockets = {};
-//
-//
-// app.ws("/ws/:id", function (ws, req){
-//
-//     ws.id = req.params.id;
-//     console.log("Recieved connection from microbit: " + ws.id);
-//     websockets[ws.id] = ws;
-//
-//     ws.on('message', function (msg){
-//         console.log("message");
-//     })
-// });
+let websockets = {};
+
+
+app.ws("/ws/:id", function (ws, req){
+    ws.id = req.params.id;
+    while (websockets[ws.id] != undefined) {
+        // var turn = Number(gameState.turn) +  Number(1);
+        ws.id += "1";
+    }
+
+    console.log("Recieved connection from: " + ws.id);
+    websockets[ws.id] = ws;
+
+    ws.on('message', function (msg){
+        var msgIn = JSON.parse(msg);
+        var msgOut = JSON.stringify({user: ws.id, chat:msgIn.ChatVal});
+        console.log(msgOut);
+
+        for (var key in websockets) {
+            websockets[key].send(msgOut);
+        }
+        // ws.send(msg);
+    })
+
+    ws.on('close',function(){
+        console.log(ws.id + " has left");
+        delete websockets[ws.id];
+    })
+});
