@@ -150,7 +150,7 @@ function addStance(){
 
 //
 //
-//NOT USED
+// Websockets
 //
 //
 
@@ -168,12 +168,15 @@ function webSoc() {
         var data = event.data;
         console.log(data);
         data = JSON.parse(data);
-        console.log(data);
-        console.log(data.user + " - " + data.chat);
-        $("<p>" + data.user + " - " + data.chat + "</p>").appendTo('#textChat');
 
-
-        updateScrollTextChat();
+        if (data.type == "chat") {
+            console.log(data.user + " - " + data.chat);
+            $("<p>" + data.user + " - " + data.chat + "</p>").appendTo('#textChat');
+            updateScrollTextChat();
+        } else if(data.type == "erName") {
+            $('#newGameText').val(data.newName);
+        }
+        
     }
 }
 

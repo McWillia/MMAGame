@@ -71,18 +71,26 @@ let websockets = {};
 
 app.ws("/ws/:id", function (ws, req){
     ws.id = req.params.id;
+    var er = false;
     while (websockets[ws.id] != undefined) {
-        // var turn = Number(gameState.turn) +  Number(1);
         ws.id += "1";
+        console.log("running : " + ws.id);
+        er = true;
     }
 
-    console.log("Recieved connection from: " + ws.id);
+
+    console.log("Recieved connection from: " + ws.id + " : " + er);
     websockets[ws.id] = ws;
+
+    if (er) {
+        console.log("Running")
+            ws.send(JSON.stringify({type:"erName", newName: ws.id}));
+    }
 
     ws.on('message', function (msg){
         var msgIn = JSON.parse(msg);
-        var msgOut = JSON.stringify({user: ws.id, chat:msgIn.ChatVal});
-        console.log(msgOut);
+        var msgOut = JSON.stringify({type:"chat", user: ws.id, chat:msgIn.ChatVal});
+        //console.log(msgOut);
 
         for (var key in websockets) {
             websockets[key].send(msgOut);
