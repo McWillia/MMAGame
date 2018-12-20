@@ -66,7 +66,15 @@ app.get('/moves', function (req, res) {
 
 });
 
+app.get('/refreshGames', function (req, res){ 
+
+
+    res.statusCode = 200;
+    res.send(JSON.stringify(games));
+});
+
 let websockets = {};
+let games = [];
 
 
 app.ws("/ws/:id", function (ws, req){
@@ -89,17 +97,40 @@ app.ws("/ws/:id", function (ws, req){
 
     ws.on('message', function (msg){
         var msgIn = JSON.parse(msg);
-        var msgOut = JSON.stringify({type:"chat", user: ws.id, chat:msgIn.ChatVal});
-        //console.log(msgOut);
 
-        for (var key in websockets) {
-            websockets[key].send(msgOut);
+        if (msgIn.type == "chat") {
+            var msgOut = JSON.stringify({type:"chat", user: ws.id, chat:msgIn.ChatVal});
+            console.log(msgOut);
+
+            for (var key in websockets) {
+                websockets[key].send(msgOut);
+            }
+            // ws.send(msg);
+        } else if(msgIn.type == "newGame"){
+            var found = false;
+            for (var i = 0; i < games.length; i++) {
+                if (games[i].player1 == ws.id || games[i].player2 == ws.id ) {
+                    found = true;
+                };
+            };
+
+            if (!found) {
+                games.push({id:i, player1:ws.id});
+            };
+
+            console.log(games);
         }
-        // ws.send(msg);
+
+        
     })
 
     ws.on('close',function(){
         console.log(ws.id + " has left");
         delete websockets[ws.id];
-    })
+        for (var i = 0; i < games.length; i++) {    
+                if (games[i].player1 == ws.id || games[i].player2 == ws.id ) {
+                    games.splice(i,1);
+                }
+        } 
+    });
 });

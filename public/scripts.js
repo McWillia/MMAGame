@@ -1,5 +1,7 @@
 var ws = null;
 var gameState = undefined;
+var activeGame = null;
+
 function init(){
     // console.log("berto")
     //$("<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>").appendTo('.col-md-6');
@@ -9,6 +11,10 @@ function init(){
     //webSoc();
 }
 
+
+///
+/// Get requests
+///
 function startNewGame() {
     var name = $('#newGameText').val();
     $("#tables").empty();
@@ -48,11 +54,29 @@ function getTurn(){
     }
 }
 
-//
-//
-// USED FOR SUPERFICIAL STUFF
-//
-//
+function refreshNewGames(){
+    if (activeGame == null) {
+        $.get("/refreshGames", 
+        function (data) {
+
+            data = JSON.parse(data);
+            $('#openGames').empty();
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                console.log(data[i].player1);
+                // <option value="     bert                ">   bert               </option>
+                $("<option value=\"" + data[i].player1 + "\">"+ data[i].player1 + "</option>").appendTo('#openGames');
+            };
+
+        });
+    }
+}
+
+
+
+///
+/// USED FOR SUPERFICIAL STUFF
+///
 
 function printGameState(data){
 
@@ -185,14 +209,28 @@ function sendChat() {
         console.log("Sending data");
         var chat = $('#textEntry').val();
         if(chat != ""){
-            ws.send(JSON.stringify({
-                ChatVal: chat
-            }));
+            ws.send(JSON.stringify({type:"chat", ChatVal: chat}));
             var chat = $('#textEntry').val("");
         }
     }
 }
 
+
+function startNewOnline() {
+
+    if (ws !=null) {
+        ws.send(JSON.stringify({type: "newGame"}))
+    }
+}
+
+
+
+
+
+
+///
+///Memey shit
+///
 var redGamePiece, blueGamePiece, yellowGamePiece;
 
 function startGame() {
